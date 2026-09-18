@@ -1,0 +1,248 @@
+<h1>Snippets</h1>
+
+@if(!mostrarFormulario()){
+
+  <div class="library-tools">
+
+    <input
+      class="search-input"
+      type="text"
+      placeholder="Buscar por título, descripción o código..."
+      #busqueda
+      (input)="filtrar(
+        busqueda.value,
+        tecnologiaSeleccionada,
+        categoriaSeleccionada
+      )"
+    >
+
+    <div class="filter-group">
+      <span class="filter-label">
+        Tecnología
+      </span>
+
+      <div
+        class="chips-viewport"
+        (pointerdown)="pararChips($event)"
+        (pointermove)="moverChips($event)"
+        (pointerup)="soltarChips()"
+        (pointercancel)="soltarChips()"
+        (pointerleave)="soltarChips()"
+      >
+        <div class="filter-chips">
+
+          <button
+            type="button"
+            class="filter-chip"
+            [class.active]="tecnologiaSeleccionada === ''"
+            (click)="seleccionarTecnologia(
+              '',
+              busqueda.value
+            )"
+          >
+            Todas
+          </button>
+
+          @for(tech of technologies; track tech.id){
+
+            <button
+              type="button"
+              class="filter-chip"
+              [class.active]="tecnologiaSeleccionada === tech.name"
+              (click)="seleccionarTecnologia(
+                tech.name,
+                busqueda.value
+              )"
+            >
+              {{ tech.name }}
+            </button>
+
+          }
+
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">
+        Categoría
+      </span>
+
+      <div
+        class="chips-viewport"
+        (pointerdown)="pararChips($event)"
+        (pointermove)="moverChips($event)"
+        (pointerup)="soltarChips()"
+        (pointercancel)="soltarChips()"
+        (pointerleave)="soltarChips()"
+      >
+        <div class="filter-chips">
+
+          <button
+            type="button"
+            class="filter-chip"
+            [class.active]="categoriaSeleccionada === ''"
+            (click)="seleccionarCategoria(
+              '',
+              busqueda.value
+            )"
+          >
+            Todas
+          </button>
+
+          @for(categoria of categorias; track categoria){
+
+            <button
+              type="button"
+              class="filter-chip"
+              [class.active]="categoriaSeleccionada === categoria"
+              (click)="seleccionarCategoria(
+                categoria,
+                busqueda.value
+              )"
+            >
+              {{ categoria }}
+            </button>
+
+          }
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tools-footer">
+
+    <span class="results-count">
+      {{ snippetsFiltrados.length }} resultados
+    </span>
+
+    <button
+      type="button"
+      class="insert-button"
+      (click)="mostrarFormulario.set(true)"
+    >
+      + Insertar snippet
+    </button>
+
+  </div>
+
+  <div class="snippet-list">
+
+    @for(snippet of snippetsFiltrados; track snippet.id){
+
+      <article class="snippet-card">
+
+        <div class="snippet-info">
+
+          <div class="snippet-meta">
+            <span>
+              {{ snippet.technology }}
+            </span>
+
+            <span>/</span>
+
+            <span>
+              {{ snippet.category }}
+            </span>
+          </div>
+
+          <h2>
+            {{ snippet.title }}
+          </h2>
+
+          <p class="snippet-description">
+            {{ snippet.description }}
+          </p>
+
+        </div>
+
+        <div class="snippet-preview">
+
+          <pre class="snippet-code"><code>{{ snippet.code }}</code></pre>
+
+          <button
+            type="button"
+            class="ver-snippet"
+          >
+            Ver snippet →
+          </button>
+
+        </div>
+
+      </article>
+
+    }
+
+  </div>
+
+} @else {
+
+  <form
+    class="snippet-form"
+    #formulario
+  >
+
+    <label>Título</label>
+    <input type="text" #title>
+
+    <label>Descripción</label>
+    <textarea #description></textarea>
+
+    <label>Categoría</label>
+    <input type="text" #category>
+
+    <label>Tecnología</label>
+
+    <select #technology>
+      @for(tech of technologies; track tech.id){
+        <option [value]="tech.name">
+          {{ tech.name }}
+        </option>
+      }
+    </select>
+
+    <label>Código / comando</label>
+    <textarea #code></textarea>
+
+    <div class="form-buttons">
+
+      <button
+        type="button"
+        (click)="guardar(
+          title.value,
+          description.value,
+          category.value,
+          technology.value,
+          code.value,
+          formulario
+        )"
+      >
+        Guardar
+      </button>
+
+      <button
+        type="button"
+        (click)="mostrarFormulario.set(false)"
+      >
+        Cancelar
+      </button>
+
+    </div>
+
+    @if(mensaje()){
+
+      <p
+        class="mensaje"
+        [class.ok]="exito()"
+        [class.error]="!exito()"
+      >
+        {{ mensaje() }}
+      </p>
+
+    }
+
+  </form>
+
+}

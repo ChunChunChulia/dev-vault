@@ -1,0 +1,285 @@
+<h1>RESOURCES</h1>
+
+<div class="resources-actions">
+  <button
+    class="insert-button"
+    type="button"
+    (click)="mostrarFormulario()"
+  >
+    INSERTAR RECURSO
+  </button>
+</div>
+
+@if(formulario){
+  <div class="resource-form">
+    <h2>NUEVO RECURSO</h2>
+
+    <label>Título</label>
+    <input type="text" #title>
+
+    <label>Descripción</label>
+    <textarea #description></textarea>
+
+    <label>Categoría</label>
+    <input type="text" #category>
+
+    <label>Tecnología</label>
+    <input type="text" #technology>
+
+    <label>URL</label>
+    <input type="text" #url>
+
+    <label>Imagen</label>
+    <input type="text" #imageUrl>
+
+    <button
+      type="button"
+      (click)="insertarResource(
+        title.value,
+        description.value,
+        category.value,
+        technology.value,
+        url.value,
+        imageUrl.value
+      )"
+    >
+      GUARDAR RECURSO
+    </button>
+  </div>
+}
+
+<div class="library-tools">
+
+  <input
+    class="search-input"
+    type="text"
+    placeholder="Buscar recursos..."
+    #searchInput
+    (input)="buscar(searchInput.value)"
+  >
+
+  <div class="filter-group">
+    <span class="filter-label">CATEGORÍA</span>
+
+    <div
+      class="chips-viewport"
+      (pointerdown)="pararChips($event)"
+      (pointermove)="moverChips($event)"
+      (pointerup)="soltarChips()"
+      (pointercancel)="soltarChips()"
+      (pointerleave)="soltarChips()"
+    >
+      <div class="filter-chips">
+
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="categoriaSeleccionada === ''"
+          (click)="filtrarCategoria('')"
+        >
+          TODAS
+        </button>
+
+        @for(categoria of categorias; track categoria){
+          <button
+            type="button"
+            class="filter-chip"
+            [class.active]="categoriaSeleccionada === categoria"
+            (click)="filtrarCategoria(categoria)"
+          >
+            {{ categoria }}
+          </button>
+        }
+
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">TECNOLOGÍA</span>
+
+    <div
+      class="chips-viewport"
+      (pointerdown)="pararChips($event)"
+      (pointermove)="moverChips($event)"
+      (pointerup)="soltarChips()"
+      (pointercancel)="soltarChips()"
+      (pointerleave)="soltarChips()"
+    >
+      <div class="filter-chips">
+
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="tecnologiaSeleccionada === ''"
+          (click)="filtrarTecnologia('')"
+        >
+          TODAS
+        </button>
+
+        @for(tecnologia of tecnologias; track tecnologia){
+          <button
+            type="button"
+            class="filter-chip"
+            [class.active]="tecnologiaSeleccionada === tecnologia"
+            (click)="filtrarTecnologia(tecnologia)"
+          >
+            {{ tecnologia }}
+          </button>
+        }
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="tools-footer">
+  <span class="results-count">
+    {{ resourcesFiltrados.length }} RECURSOS
+  </span>
+</div>
+
+<div class="resources-grid">
+
+  @for(resource of resourcesFiltrados; track resource.id){
+
+    <article
+      class="resource-card"
+      [class.editing]="recursoEditando?.id === resource.id"
+    >
+
+      <div class="resource-image">
+        @if(resource.image_url){
+          <img
+            [src]="resource.image_url"
+            [alt]="resource.title"
+          >
+        } @else {
+          <div class="image-placeholder">
+            NO IMAGE
+          </div>
+        }
+      </div>
+
+      <div class="resource-info">
+        <span class="resource-category">
+          {{ resource.category }}
+        </span>
+
+        <h2>{{ resource.title }}</h2>
+
+        <p class="resource-description">
+          {{ resource.description }}
+        </p>
+
+        <span class="resource-technology">
+          {{ resource.technology }}
+        </span>
+      </div>
+
+      <div class="card-actions">
+
+        <a
+          class="resource-link"
+          [href]="resource.url"
+          target="_blank"
+        >
+          ABRIR →
+        </a>
+
+        <div class="resource-buttons">
+
+          <button
+            type="button"
+            (click)="abrirEdicion(resource)"
+          >
+            EDITAR
+          </button>
+
+          <button
+            type="button"
+            (click)="borrarResource(resource.id)"
+          >
+            X
+          </button>
+
+        </div>
+      </div>
+
+      @if(recursoEditando?.id === resource.id){
+
+        <div class="resource-edit-form">
+
+          <label>Título</label>
+          <input
+            type="text"
+            [value]="resource.title"
+            #editTitle
+          >
+
+          <label>Descripción</label>
+          <textarea #editDescription>{{ resource.description }}</textarea>
+
+          <label>Categoría</label>
+          <input
+            type="text"
+            [value]="resource.category"
+            #editCategory
+          >
+
+          <label>Tecnología</label>
+          <input
+            type="text"
+            [value]="resource.technology"
+            #editTechnology
+          >
+
+          <label>URL</label>
+          <input
+            type="text"
+            [value]="resource.url"
+            #editUrl
+          >
+
+          <label>Imagen</label>
+          <input
+            type="text"
+            [value]="resource.image_url"
+            #editImage
+          >
+
+          <div class="edit-buttons">
+
+            <button
+              type="button"
+              (click)="editarResource(
+                resource.id,
+                editTitle.value,
+                editDescription.value,
+                editCategory.value,
+                editTechnology.value,
+                editUrl.value,
+                editImage.value
+              )"
+            >
+              GUARDAR CAMBIOS
+            </button>
+
+            <button
+              type="button"
+              (click)="cerrarEdicion()"
+            >
+              CANCELAR
+            </button>
+
+          </div>
+
+        </div>
+      }
+
+    </article>
+
+  }
+
+</div>

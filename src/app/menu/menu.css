@@ -1,0 +1,103 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 10;
+}
+
+
+/* MENÚ */
+
+.menu {
+  min-height: 70px;
+
+  padding: 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #080808;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+  box-sizing: border-box;
+}
+
+
+/* LOGO */
+
+.logo {
+  color: white;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+
+/* LAS // */
+
+.slashes {
+  color: #b77cff;
+}
+
+
+/* ENLACES */
+
+nav {
+  display: flex;
+  gap: 30px;
+}
+
+nav a {
+  color: #aaaaaa;
+  text-decoration: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid transparent;
+  transition: 0.2s;
+}
+
+
+/* HOVER */
+
+nav a:hover {
+  color: white;
+  border-bottom-color: #b77cff;
+}
+nav a.active {
+  color: white;
+  border-bottom-color: #b77cff;
+}
+
+
+/* MÓVIL */
+
+@media (max-width: 650px) {
+  .menu {
+    min-height: auto;
+    padding: 22px 22px 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .logo {
+    font-size: 18px;
+  }
+  nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  nav a {
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    padding-bottom: 5px;
+  }
+}
