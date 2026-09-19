@@ -1,0 +1,241 @@
+<main>
+
+  <header class="reference-header">
+
+    <h1>REFERENCE</h1>
+
+    <button
+      type="button"
+      (click)="abrirFormulario()">
+      + NUEVA REFERENCIA
+    </button>
+
+  </header>
+
+  @if(mensaje){
+    <p class="mensaje">
+        {{ mensaje }}
+    </p>
+    }
+    <p class="results-count">
+    {{ references.length }} RESULTADOS
+    </p>
+
+  @if(mostrarFormulario){
+
+    <section class="reference-form">
+
+      <h2>
+        {{ referenceEditando
+          ? 'EDITAR REFERENCIA'
+          : 'NUEVA REFERENCIA'
+        }}
+      </h2>
+
+      <form (ngSubmit)="guardarReference()">
+
+        <label>
+          Título
+        </label>
+
+        <input
+          type="text"
+          name="title"
+          [(ngModel)]="formulario.title">
+
+
+        <label>
+          Descripción
+        </label>
+
+        <textarea
+          name="description"
+          [(ngModel)]="formulario.description">
+        </textarea>
+
+
+        <label>
+          Categoría
+        </label>
+
+        <input
+          type="text"
+          name="category"
+          [(ngModel)]="formulario.category"
+          placeholder="Buttons, Cards, Menus...">
+
+
+        <label>
+          Tecnología
+        </label>
+
+        <input
+          type="text"
+          name="technology"
+          [(ngModel)]="formulario.technology"
+          placeholder="HTML / CSS">
+
+
+        <label>
+          HTML
+        </label>
+
+        <textarea
+          name="html_code"
+          [(ngModel)]="formulario.html_code">
+        </textarea>
+
+
+        <label>
+          CSS
+        </label>
+
+        <textarea
+          name="css_code"
+          [(ngModel)]="formulario.css_code">
+        </textarea>
+
+
+        <label>
+          JavaScript
+        </label>
+
+        <textarea
+          name="js_code"
+          [(ngModel)]="formulario.js_code">
+        </textarea>
+
+
+        <label>
+          Tipo de preview
+        </label>
+
+        <select
+          name="preview_mode"
+          [(ngModel)]="formulario.preview_mode">
+
+          <option value="live">
+            Live
+          </option>
+
+          <option value="image">
+            Imagen
+          </option>
+
+        </select>
+
+
+        @if(formulario.preview_mode === 'image'){
+
+          <label>
+            URL de imagen
+          </label>
+
+          <input
+            type="text"
+            name="image_url"
+            [(ngModel)]="formulario.image_url">
+
+        }
+
+
+        <div class="form-actions">
+
+          <button type="submit">
+
+            {{ referenceEditando
+              ? 'GUARDAR CAMBIOS'
+              : 'GUARDAR REFERENCIA'
+            }}
+
+          </button>
+
+          <button
+            type="button"
+            (click)="cerrarFormulario()">
+            CANCELAR
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  }
+
+
+  <div class="reference-grid">
+
+    @for(reference of references; track reference.id){
+
+      <article class="reference-card">
+
+        @if(
+          reference.preview_mode === 'image'
+          && reference.image_url
+        ){
+
+          <img
+            class="reference-preview-image"
+            [src]="reference.image_url"
+            [alt]="reference.title">
+
+        }@else{
+
+          <iframe
+            [srcdoc]="reference.preview"
+            sandbox="allow-scripts">
+          </iframe>
+
+        }
+
+
+        <div class="reference-info">
+
+          <span>
+            {{ reference.category }}
+            /
+            {{ reference.technology }}
+          </span>
+
+          <h2>
+            {{ reference.title }}
+          </h2>
+
+          <p>
+            {{ reference.description }}
+          </p>
+
+        </div>
+
+
+        <div class="reference-actions">
+
+          <button
+            type="button"
+            (click)="abrirEdicion(reference)">
+            EDITAR
+          </button>
+
+          <button
+            type="button"
+            (click)="borrarReference(reference)">
+            ×
+          </button>
+
+        </div>
+
+      </article>
+
+    }@empty{
+
+      <p>
+        Todavía no hay referencias guardadas.
+      </p>
+
+    }
+
+  </div>
+
+</main>

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { ResourcesComponent } from './pages/resources/resources';
 import { Home } from './home/home';
 import { Snippets } from './pages/snippets/snippets';
+import { Reference } from './reference/reference';
 
 export const routes: Routes = [
 
@@ -17,4 +18,9 @@ export const routes: Routes = [
 
   { path: 'resources', 
     component: ResourcesComponent },
+
+  {
+    path: 'reference',
+    component: Reference
+  },
 ];

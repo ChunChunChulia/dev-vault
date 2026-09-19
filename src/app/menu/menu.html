@@ -1,14 +1,38 @@
 <header class="menu">
 
-  <div class="logo" routerLink="/">
-    DEV<span class="slashes">//</span>VAULT
-  </div>
+  <div class="menu-inner">
 
-  <nav>
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-    <a routerLink="/snippets" routerLinkActive="active">Code</a>
-    <a routerLink="/reference" routerLinkActive="active">Reference</a>
-    <a routerLink="/resources" routerLinkActive="active">Resources</a>
-  </nav>
+    <div class="logo">
+      DEV<span class="slashes">//</span>VAULT
+    </div>
+
+    <nav>
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        HOME
+      </a>
+
+      <a
+        routerLink="/snippets"
+        routerLinkActive="active">
+        CODE
+      </a>
+
+      <a
+        routerLink="/reference"
+        routerLinkActive="active">
+        REFERENCE
+      </a>
+
+      <a
+        routerLink="/resources"
+        routerLinkActive="active">
+        RESOURCES
+      </a>
+    </nav>
+
+  </div>
 
 </header>

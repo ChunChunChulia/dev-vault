@@ -1,17 +1,9 @@
 <h1>RESOURCES</h1>
 
-<div class="resources-actions">
-  <button
-    class="insert-button"
-    type="button"
-    (click)="mostrarFormulario()"
-  >
-    INSERTAR RECURSO
-  </button>
-</div>
-
 @if(formulario){
+
   <div class="resource-form">
+
     <h2>NUEVO RECURSO</h2>
 
     <label>Título</label>
@@ -45,8 +37,11 @@
     >
       GUARDAR RECURSO
     </button>
+
   </div>
+
 }
+
 
 <div class="library-tools">
 
@@ -58,8 +53,12 @@
     (input)="buscar(searchInput.value)"
   >
 
+
   <div class="filter-group">
-    <span class="filter-label">CATEGORÍA</span>
+
+    <span class="filter-label">
+      CATEGORÍA
+    </span>
 
     <div
       class="chips-viewport"
@@ -69,6 +68,7 @@
       (pointercancel)="soltarChips()"
       (pointerleave)="soltarChips()"
     >
+
       <div class="filter-chips">
 
         <button
@@ -81,6 +81,7 @@
         </button>
 
         @for(categoria of categorias; track categoria){
+
           <button
             type="button"
             class="filter-chip"
@@ -89,14 +90,21 @@
           >
             {{ categoria }}
           </button>
+
         }
 
       </div>
+
     </div>
+
   </div>
 
+
   <div class="filter-group">
-    <span class="filter-label">TECNOLOGÍA</span>
+
+    <span class="filter-label">
+      TECNOLOGÍA
+    </span>
 
     <div
       class="chips-viewport"
@@ -106,6 +114,7 @@
       (pointercancel)="soltarChips()"
       (pointerleave)="soltarChips()"
     >
+
       <div class="filter-chips">
 
         <button
@@ -118,6 +127,7 @@
         </button>
 
         @for(tecnologia of tecnologias; track tecnologia){
+
           <button
             type="button"
             class="filter-chip"
@@ -126,19 +136,34 @@
           >
             {{ tecnologia }}
           </button>
+
         }
 
       </div>
+
     </div>
+
   </div>
 
 </div>
 
+
 <div class="tools-footer">
+
   <span class="results-count">
     {{ resourcesFiltrados.length }} RECURSOS
   </span>
+
+  <button
+    class="insert-button"
+    type="button"
+    (click)="mostrarFormulario()"
+  >
+    INSERTAR RECURSO
+  </button>
+
 </div>
+
 
 <div class="resources-grid">
 
@@ -150,24 +175,34 @@
     >
 
       <div class="resource-image">
+
         @if(resource.image_url){
+
           <img
             [src]="resource.image_url"
             [alt]="resource.title"
           >
+
         } @else {
+
           <div class="image-placeholder">
             NO IMAGE
           </div>
+
         }
+
       </div>
 
+
       <div class="resource-info">
+
         <span class="resource-category">
           {{ resource.category }}
         </span>
 
-        <h2>{{ resource.title }}</h2>
+        <h2>
+          {{ resource.title }}
+        </h2>
 
         <p class="resource-description">
           {{ resource.description }}
@@ -176,7 +211,9 @@
         <span class="resource-technology">
           {{ resource.technology }}
         </span>
+
       </div>
+
 
       <div class="card-actions">
 
@@ -187,6 +224,7 @@
         >
           ABRIR →
         </a>
+
 
         <div class="resource-buttons">
 
@@ -205,49 +243,63 @@
           </button>
 
         </div>
+
       </div>
+
 
       @if(recursoEditando?.id === resource.id){
 
         <div class="resource-edit-form">
 
           <label>Título</label>
+
           <input
             type="text"
             [value]="resource.title"
             #editTitle
           >
 
+
           <label>Descripción</label>
+
           <textarea #editDescription>{{ resource.description }}</textarea>
 
+
           <label>Categoría</label>
+
           <input
             type="text"
             [value]="resource.category"
             #editCategory
           >
 
+
           <label>Tecnología</label>
+
           <input
             type="text"
             [value]="resource.technology"
             #editTechnology
           >
 
+
           <label>URL</label>
+
           <input
             type="text"
             [value]="resource.url"
             #editUrl
           >
 
+
           <label>Imagen</label>
+
           <input
             type="text"
             [value]="resource.image_url"
             #editImage
           >
+
 
           <div class="edit-buttons">
 
@@ -276,6 +328,7 @@
           </div>
 
         </div>
+
       }
 
     </article>

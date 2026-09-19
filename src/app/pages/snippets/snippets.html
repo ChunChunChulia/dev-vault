@@ -90,7 +90,7 @@
             Todas
           </button>
 
-          @for(categoria of categorias; track categoria){
+          @for(categoria of categoriasDisponibles; track categoria){
 
             <button
               type="button"
@@ -162,14 +162,103 @@
 
           <pre class="snippet-code"><code>{{ snippet.code }}</code></pre>
 
-          <button
-            type="button"
-            class="ver-snippet"
-          >
-            Ver snippet →
-          </button>
+            <div class="snippet-actions">
+
+              <button type="button" class="edit-snippet" (click)="abrirEdicion(snippet)"
+              >
+                EDITAR
+              </button>
+
+              <button type="button" class="delete-snippet" (click)="borrarSnippet(snippet.id)"
+              >
+                X
+              </button>
+
+            </div>
 
         </div>
+
+        @if(snippetEditando?.id === snippet.id){
+
+        <div class="snippet-edit-form">
+
+          <label>Título</label>
+
+          <input
+            type="text"
+            [value]="snippet.title"
+            #editTitle
+          >
+
+          <label>Descripción</label>
+
+          <textarea
+            #editDescription
+          >{{ snippet.description }}</textarea>
+
+          <label>Categoría</label>
+
+          <input
+            type="text"
+            [value]="snippet.category"
+            #editCategory
+          >
+
+          <label>Tecnología</label>
+
+          <select #editTechnology>
+
+            @for(
+              tech of technologies;
+              track tech.id
+            ){
+
+              <option
+                [value]="tech.name"
+                [selected]="tech.name === snippet.technology"
+              >
+                {{ tech.name }}
+              </option>
+
+            }
+
+          </select>
+
+          <label>Código / comando</label>
+
+          <textarea
+            class="edit-code"
+            #editCode
+          >{{ snippet.code }}</textarea>
+
+          <div class="edit-buttons">
+
+            <button
+              type="button"
+              (click)="editarSnippet(
+                snippet.id,
+                editTitle.value,
+                editDescription.value,
+                editCategory.value,
+                editTechnology.value,
+                editCode.value
+              )"
+            >
+              GUARDAR CAMBIOS
+            </button>
+
+            <button
+              type="button"
+              (click)="cerrarEdicion()"
+            >
+              CANCELAR
+            </button>
+
+          </div>
+
+        </div>
+
+      }
 
       </article>
 

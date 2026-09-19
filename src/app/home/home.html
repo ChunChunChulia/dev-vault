@@ -1,1 +1,207 @@
-<p>home works!</p>
+<main>
+
+  <section class="hero">
+
+    <h1>DEV//VAULT</h1>
+
+    <p>Mi biblioteca personal de desarrollo web</p>
+
+    <p>
+      Snippets, recursos y referencias que voy guardando
+      mientras estudio y desarrollo proyectos.
+    </p>
+
+  </section>
+
+
+  <section class="hub">
+
+    <div class="hub-card">
+
+      <span class="hub-kicker">
+        01 / CODE
+      </span>
+
+      <a routerLink="/snippets">
+        Snippets
+      </a>
+
+      <p>
+        Código, comandos y fragmentos que quiero reutilizar rápido.
+      </p>
+
+    </div>
+
+
+    <div class="hub-card">
+
+      <span class="hub-kicker">
+        02 / REFERENCE
+      </span>
+
+      <a routerLink="/reference">
+        Patrones visuales
+      </a>
+
+      <p>
+        Botones, menús, animaciones y soluciones visuales para consultar de un vistazo.
+      </p>
+
+    </div>
+
+
+    <div class="hub-card">
+
+      <span class="hub-kicker">
+        03 / RESOURCES
+      </span>
+
+      <a routerLink="/resources">
+        Recursos
+      </a>
+
+      <p>
+        Herramientas, webs, librerías y referencias externas que quiero conservar.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <section class="recent">
+
+    <h2>RECENTLY ADDED</h2>
+
+
+    <div class="recent-grid">
+
+
+      <!-- SNIPPETS -->
+
+      @for(snippet of ultimosSnippets; track snippet.id){
+
+        <article class="recent-card recent-snippet">
+
+          <span class="recent-kicker">
+            {{ snippet.technology }} / {{ snippet.category }}
+          </span>
+
+          <h3>
+            {{ snippet.title }}
+          </h3>
+
+          <p class="recent-description">
+            {{ snippet.description }}
+          </p>
+
+          <pre class="recent-code"><code>{{ snippet.code }}</code></pre>
+
+          <a routerLink="/snippets">
+            VER EN CODE →
+          </a>
+
+        </article>
+
+      }
+
+
+      <!-- RESOURCES -->
+
+      @for(resource of ultimosResources; track resource.id){
+
+        <article class="recent-card recent-resource">
+
+          @if(resource.image_url){
+
+            <img
+              [src]="resource.image_url"
+              [alt]="resource.title"
+            >
+
+          }
+
+          <span class="recent-kicker">
+            {{ resource.category }}
+          </span>
+
+          <h3>
+            {{ resource.title }}
+          </h3>
+
+          <p class="recent-description">
+            {{ resource.description }}
+          </p>
+
+          <span class="recent-tech">
+            {{ resource.technology }}
+          </span>
+
+          <a
+            [href]="resource.url"
+            target="_blank"
+          >
+            ABRIR →
+          </a>
+
+        </article>
+
+      }
+
+
+      <!-- REFERENCE -->
+
+      @for(reference of ultimasReferences; track reference.id){
+
+        <article class="recent-card recent-reference">
+
+          @if(
+            reference.preview_mode === 'image'
+            && reference.image_url
+          ){
+
+            <img
+              class="recent-reference-image"
+              [src]="reference.image_url"
+              [alt]="reference.title"
+            >
+
+          } @else {
+
+            <iframe
+              class="recent-reference-preview"
+              [srcdoc]="reference.preview"
+              sandbox="allow-scripts">
+            </iframe>
+
+          }
+
+          <span class="recent-kicker">
+            REFERENCE / {{ reference.category }}
+          </span>
+
+          <h3>
+            {{ reference.title }}
+          </h3>
+
+          <p class="recent-description">
+            {{ reference.description }}
+          </p>
+
+          <span class="recent-tech">
+            {{ reference.technology }}
+          </span>
+
+          <a routerLink="/reference">
+            VER EN REFERENCE →
+          </a>
+
+        </article>
+
+      }
+
+    </div>
+
+  </section>
+
+</main>

@@ -503,3 +503,126 @@ select{
     align-self:flex-start;
   }
 }
+
+.snippet-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:16px;
+}
+
+.snippet-actions button{
+  padding:8px 13px;
+  background:transparent;
+  font-size:10px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  cursor:pointer;
+}
+
+.edit-snippet{
+  color:#b77cff;
+  border:1px solid #b77cff;
+}
+
+.edit-snippet:hover{
+  color:#080808;
+  background:#b77cff;
+}
+
+.delete-snippet{
+  color:#ff6b6b;
+  border:1px solid #ff6b6b;
+}
+
+.delete-snippet:hover{
+  color:#080808;
+  background:#ff6b6b;
+}
+
+.snippet-edit-form{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px 18px;
+  margin-top:10px;
+  padding:24px;
+  background:rgba(8,8,8,.96);
+  border:1px solid rgba(255,255,255,.14);
+}
+
+.snippet-edit-form label{
+  margin:0;
+}
+
+.snippet-edit-form input,
+.snippet-edit-form textarea,
+.snippet-edit-form select{
+  width:100%;
+  box-sizing:border-box;
+}
+
+.snippet-edit-form .edit-code{
+  min-height:220px;
+  font-family:"Courier New",monospace;
+}
+
+.snippet-edit-form label:nth-of-type(2),
+.snippet-edit-form textarea:nth-of-type(1),
+.snippet-edit-form label:nth-of-type(5),
+.snippet-edit-form .edit-code{
+  grid-column:1/-1;
+}
+
+.snippet-edit-form .edit-buttons{
+  grid-column:1/-1;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.snippet-edit-form .edit-buttons button{
+  padding:10px 16px;
+  background:transparent;
+  font-size:10px;
+  font-weight:700;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.snippet-edit-form .edit-buttons button:first-child{
+  color:#b77cff;
+  border:1px solid #b77cff;
+}
+
+.snippet-edit-form .edit-buttons button:first-child:hover{
+  color:#080808;
+  background:#b77cff;
+}
+
+.snippet-edit-form .edit-buttons button:last-child{
+  color:#888;
+  border:1px solid #555;
+}
+
+@media(max-width:650px){
+
+  .snippet-edit-form{
+    display:flex;
+    flex-direction:column;
+    padding:16px;
+  }
+
+  .snippet-actions{
+    justify-content:flex-start;
+  }
+
+  .snippet-edit-form .edit-buttons{
+    flex-direction:column;
+  }
+
+  .snippet-edit-form .edit-buttons button{
+    width:100%;
+  }
+}
