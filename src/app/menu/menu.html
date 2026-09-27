@@ -31,8 +31,24 @@
         routerLinkActive="active">
         RESOURCES
       </a>
+      @if(auth.cargando()){
+        <span class="session-status">Comprobando sesión...</span>
+      } @else {
+        @if(auth.admin()){
+          <button type="button" (click)="auth.cerrarSesion()">
+            Cerrar sesión
+          </button>
+        } @else {
+          <a routerLink="/login" routerLinkActive="active">
+            ADMIN
+          </a>
+        }
+      }
     </nav>
 
   </div>
 
+  @if(auth.mensaje()){
+    <p class="session-message">{{ auth.mensaje() }}</p>
+  }
 </header>

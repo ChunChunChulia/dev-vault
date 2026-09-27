@@ -52,7 +52,7 @@ export class Home implements OnInit {
   cargarUltimosSnippets(){
 
     this.http.get<any[]>(
-      'http://localhost/dev-vault-api/technologies/snippets.php'
+      'https://devvault.alwaysdata.net/dev-vault-api/technologies/snippets.php'
     ).subscribe(datos => {
 
       this.ultimosSnippets = datos
@@ -77,7 +77,7 @@ export class Home implements OnInit {
   cargarUltimosResources(){
 
     this.http.get<any[]>(
-      'http://localhost/dev-vault-api/technologies/resources.php'
+      'https://devvault.alwaysdata.net/dev-vault-api/technologies/resources.php'
     ).subscribe(datos => {
 
       this.ultimosResources = datos
@@ -102,7 +102,7 @@ export class Home implements OnInit {
   cargarUltimasReferences(){
 
     this.http.get<any[]>(
-      'http://localhost/dev-vault-api/technologies/references.php'
+      'https://devvault.alwaysdata.net/dev-vault-api/technologies/references.php'
     ).subscribe(datos => {
 
       this.ultimasReferences = datos

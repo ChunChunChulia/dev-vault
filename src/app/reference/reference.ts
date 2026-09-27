@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../auth.service';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -20,9 +21,14 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class Reference implements OnInit {
 
   private apiUrl =
-    'http://localhost/dev-vault-api/technologies/references.php';
+    'https://devvault.alwaysdata.net/dev-vault-api/technologies/references.php';
 
   references: any[] = [];
+  referencesPaginadas: any[] = [];
+
+  paginaActual = 1;
+  referencesPorPagina = 6;
+  totalPaginas = 0;
 
   mostrarFormulario = false;
 
@@ -44,6 +50,7 @@ export class Reference implements OnInit {
 
 
   constructor(
+    public auth: AuthService,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer
@@ -67,12 +74,44 @@ export class Reference implements OnInit {
             this.crearPreview(reference)
         }));
 
+        this.paginaActual = 1;
+        this.actualizarPaginacion();
+
         this.cdr.detectChanges();
 
       });
 
   }
 
+
+  actualizarPaginacion(){
+
+    this.totalPaginas = Math.ceil(this.references.length / this.referencesPorPagina); // Math.ceil() redondea hacia arriba para calcular el número total de páginas.
+
+    const inicio =
+      (this.paginaActual - 1) *
+      this.referencesPorPagina;
+
+    this.referencesPaginadas =
+      this.references.slice(
+        inicio,
+        inicio + this.referencesPorPagina
+      );
+  }
+
+  cambiarPagina(pagina: number){
+
+    if(
+      pagina < 1 ||
+      pagina > this.totalPaginas
+    ){
+      return;
+    }
+
+    this.paginaActual = pagina;
+    this.actualizarPaginacion();
+    this.cdr.detectChanges();
+  }
 
   abrirFormulario(){
 

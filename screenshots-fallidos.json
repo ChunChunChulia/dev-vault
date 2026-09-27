@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Flexbox Froggy",
+    "url": "https://flexboxfroggy.com/#es",
+    "file": "flexbox-froggy.png",
+    "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://flexboxfroggy.com/#es\nCall log:\n\u001b[2m  - navigating to \"https://flexboxfroggy.com/#es\", waiting until \"domcontentloaded\"\u001b[22m\n"
+  },
+  {
+    "title": "iHateRegex",
+    "url": "https://ihateregex.io/",
+    "file": "ihateregex.png",
+    "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://ihateregex.io/\nCall log:\n\u001b[2m  - navigating to \"https://ihateregex.io/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+  },
+  {
+    "title": "JSONPlaceholder",
+    "url": "https://jsonplaceholder.typicode.com/",
+    "file": "jsonplaceholder.png",
+    "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://jsonplaceholder.typicode.com/\nCall log:\n\u001b[2m  - navigating to \"https://jsonplaceholder.typicode.com/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+  },
+  {
+    "title": "Epoch Converter",
+    "url": "https://www.epochconverter.com/",
+    "file": "epoch-converter.png",
+    "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://www.epochconverter.com/\nCall log:\n\u001b[2m  - navigating to \"https://www.epochconverter.com/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+  },
+  {
+    "title": "Python for Everybody",
+    "url": "https://www.py4e.com/lessons",
+    "file": "python-for-everybody.png",
+    "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://www.py4e.com/lessons\nCall log:\n\u001b[2m  - navigating to \"https://www.py4e.com/lessons\", waiting until \"domcontentloaded\"\u001b[22m\n"
+  },
+  {
+    "title": "W3Cx",
+    "url": "https://w3cx.org/",
+    "file": "w3cx.png",
+    "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://w3cx.org/\nCall log:\n\u001b[2m  - navigating to \"https://w3cx.org/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+  },
+  {
+    "title": "JavaScript30",
+    "url": "https://javascript30.com/",
+    "file": "javascript30.png",
+    "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://javascript30.com/\nCall log:\n\u001b[2m  - navigating to \"https://javascript30.com/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+  }
+]

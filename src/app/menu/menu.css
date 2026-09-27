@@ -57,7 +57,8 @@ nav{
   gap:30px;
 }
 
-nav a{
+nav a,
+nav button{
   color:#aaaaaa;
   text-decoration:none;
   font-size:13px;
@@ -71,7 +72,8 @@ nav a{
 
 /* HOVER */
 
-nav a:hover{
+nav a:hover,
+nav button:hover{
   color:white;
   border-bottom-color:#b77cff;
 }
@@ -114,10 +116,38 @@ nav a.active{
     border-top:1px solid rgba(255,255,255,.12);
   }
 
-  nav a{
+  nav a,
+nav button{
     font-size:14px;
     letter-spacing:.8px;
     padding-bottom:5px;
   }
 
+}
+nav{
+  flex-wrap:wrap;
+}
+
+nav button{
+  background:transparent;
+  border:0;
+  border-bottom:1px solid transparent;
+  padding:0 0 5px;
+  font-family:inherit;
+  cursor:pointer;
+}
+
+.session-status{
+  color:#aaa;
+  font-size:13px;
+}
+
+.session-message{
+  width:min(1100px,100%);
+  margin:0 auto;
+  padding:12px 32px;
+  color:#bcbcbc;
+  font-size:13px;
+  line-height:1.5;
+  box-sizing:border-box;
 }

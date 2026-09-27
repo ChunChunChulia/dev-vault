@@ -1,23 +1,15 @@
-import {
-  Component,
-  signal,
-  ChangeDetectorRef,
-  ElementRef,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
+import { Component, signal, ChangeDetectorRef, ElementRef, OnInit, OnDestroy } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-snippets',
   imports: [],
   templateUrl: './snippets.html',
-  styleUrl: './snippets.css'
+  styleUrl: './snippets.css',
 })
-
 export class Snippets implements OnInit, OnDestroy {
-
   mensaje = signal('');
   exito = signal(false);
   mostrarFormulario = signal(false);
@@ -28,6 +20,11 @@ export class Snippets implements OnInit, OnDestroy {
   technologies: any[] = [];
   snippets: any[] = [];
   snippetsFiltrados: any[] = [];
+  snippetsPaginados: any[] = [];
+
+  paginaActual = 1;
+  snippetsPorPagina = 6;
+  totalPaginas = 0;
 
   categorias: string[] = [];
   categoriasDisponibles: string[] = [];
@@ -41,23 +38,23 @@ export class Snippets implements OnInit, OnDestroy {
   chipStartScroll = 0;
   chipTimer?: number;
 
-  apiUrl =
-    'http://localhost/dev-vault-api/technologies/snippets.php';
+  apiUrl = 'https://devvault.alwaysdata.net/dev-vault-api/technologies/snippets.php';
 
   constructor(
+    public auth: AuthService,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-    private host: ElementRef<HTMLElement>
+    private host: ElementRef<HTMLElement>,
   ) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.cargarTecnologias();
     this.cargarSnippets();
     this.iniciarMovimientoChips();
   }
 
-  ngOnDestroy(){
-    if(this.chipTimer){
+  ngOnDestroy() {
+    if (this.chipTimer) {
       window.clearInterval(this.chipTimer);
     }
   }
@@ -68,30 +65,21 @@ export class Snippets implements OnInit, OnDestroy {
     category: string,
     technology: string,
     code: string,
-    formulario: HTMLFormElement
-  ){
+    formulario: HTMLFormElement,
+  ) {
     const datos = {
       title,
       description,
       category,
       technology,
-      code
+      code,
     };
 
-    this.http.post(
-      this.apiUrl,
-      datos
-    ).subscribe({
-      next: respuesta => {
+    this.http.post(this.apiUrl, datos).subscribe({
+      next: (respuesta) => {
+        console.log('Snippet guardado:', respuesta);
 
-        console.log(
-          'Snippet guardado:',
-          respuesta
-        );
-
-        this.mensaje.set(
-          'Snippet guardado correctamente'
-        );
+        this.mensaje.set('Snippet guardado correctamente');
 
         this.exito.set(true);
 
@@ -100,213 +88,146 @@ export class Snippets implements OnInit, OnDestroy {
         this.cargarSnippets();
       },
 
-      error: error => {
+      error: (error) => {
+        console.log('Error guardando snippet:', error);
 
-        console.log(
-          'Error guardando snippet:',
-          error
-        );
-
-        this.mensaje.set(
-          'Error al guardar el snippet'
-        );
+        this.mensaje.set('Error al guardar el snippet');
 
         this.exito.set(false);
-      }
-    });
-  }
-
-  cargarTecnologias(){
-
-    this.http.get<any[]>(
-      'http://localhost/dev-vault-api/technologies/technologies.php'
-    ).subscribe({
-
-      next: respuesta => {
-        this.technologies = respuesta;
-        this.cdr.detectChanges();
       },
-
-      error: error => {
-        console.log(
-          'Error cargando tecnologías:',
-          error
-        );
-      }
-
     });
   }
 
-  cargarSnippets(){
+  cargarTecnologias() {
+    this.http
+      .get<any[]>('https://devvault.alwaysdata.net/dev-vault-api/technologies/technologies.php')
+      .subscribe({
+        next: (respuesta) => {
+          this.technologies = respuesta;
+          this.cdr.detectChanges();
+        },
 
-    this.http.get<any[]>(
-      this.apiUrl
-    ).subscribe({
+        error: (error) => {
+          console.log('Error cargando tecnologías:', error);
+        },
+      });
+  }
 
-      next: respuesta => {
-
+  cargarSnippets() {
+    this.http.get<any[]>(this.apiUrl).subscribe({
+      next: (respuesta) => {
         this.snippets = respuesta;
 
         this.actualizarCategoriasDisponibles();
 
-        this.filtrar(
-          '',
-          this.tecnologiaSeleccionada,
-          this.categoriaSeleccionada
-        );
+        this.filtrar('', this.tecnologiaSeleccionada, this.categoriaSeleccionada);
 
         this.cdr.detectChanges();
       },
 
-      error: error => {
-
-        console.log(
-          'ERROR CARGANDO SNIPPETS:',
-          error
-        );
-      }
-
+      error: (error) => {
+        console.log('ERROR CARGANDO SNIPPETS:', error);
+      },
     });
   }
 
-  actualizarCategoriasDisponibles(){
-
+  actualizarCategoriasDisponibles() {
     this.categorias = [
-      ...new Set(
-        this.snippets
-          .map(snippet => snippet.category)
-          .filter(Boolean)
-      )
+      ...new Set(this.snippets.map((snippet) => snippet.category).filter(Boolean)),
     ];
 
-    let snippetsDisponibles =
-      this.snippets;
+    let snippetsDisponibles = this.snippets;
 
-    if(
-      this.tecnologiaSeleccionada !== ''
-    ){
-      snippetsDisponibles =
-        this.snippets.filter(
-          snippet =>
-            snippet.technology ===
-            this.tecnologiaSeleccionada
-        );
+    if (this.tecnologiaSeleccionada !== '') {
+      snippetsDisponibles = this.snippets.filter(
+        (snippet) => snippet.technology === this.tecnologiaSeleccionada,
+      );
     }
 
     this.categoriasDisponibles = [
-      ...new Set(
-        snippetsDisponibles
-          .map(snippet => snippet.category)
-          .filter(Boolean)
-      )
+      ...new Set(snippetsDisponibles.map((snippet) => snippet.category).filter(Boolean)),
     ];
 
-    if(
+    if (
       this.categoriaSeleccionada !== '' &&
-      !this.categoriasDisponibles.includes(
-        this.categoriaSeleccionada
-      )
-    ){
+      !this.categoriasDisponibles.includes(this.categoriaSeleccionada)
+    ) {
       this.categoriaSeleccionada = '';
     }
   }
 
-  filtrar(
-    texto: string,
-    tecnologia: string,
-    categoria: string
-  ){
+  filtrar(texto: string, tecnologia: string, categoria: string) {
+    const busqueda = texto.toLowerCase().trim();
 
-    const busqueda =
-      texto.toLowerCase().trim();
+    this.snippetsFiltrados = this.snippets.filter((snippet) => {
+      const titulo = String(snippet.title ?? '').toLowerCase();
 
-    this.snippetsFiltrados =
-      this.snippets.filter(snippet => {
+      const descripcion = String(snippet.description ?? '').toLowerCase();
 
-        const titulo =
-          String(
-            snippet.title ?? ''
-          ).toLowerCase();
+      const codigo = String(snippet.code ?? '').toLowerCase();
 
-        const descripcion =
-          String(
-            snippet.description ?? ''
-          ).toLowerCase();
+      const coincideTexto =
+        titulo.includes(busqueda) || descripcion.includes(busqueda) || codigo.includes(busqueda);
 
-        const codigo =
-          String(
-            snippet.code ?? ''
-          ).toLowerCase();
+      const coincideTecnologia = tecnologia === '' || snippet.technology === tecnologia;
 
-        const coincideTexto =
-          titulo.includes(busqueda) ||
-          descripcion.includes(busqueda) ||
-          codigo.includes(busqueda);
+      const coincideCategoria = categoria === '' || snippet.category === categoria;
 
-        const coincideTecnologia =
-          tecnologia === '' ||
-          snippet.technology === tecnologia;
+      return coincideTexto && coincideTecnologia && coincideCategoria;
+    });
 
-        const coincideCategoria =
-          categoria === '' ||
-          snippet.category === categoria;
-
-        return (
-          coincideTexto &&
-          coincideTecnologia &&
-          coincideCategoria
-        );
-      });
+    this.paginaActual = 1;
+    this.actualizarPaginacion();
 
     this.cdr.detectChanges();
   }
 
-  seleccionarTecnologia(
-    tecnologia: string,
-    texto: string
-  ){
+  actualizarPaginacion() {
+    this.totalPaginas = Math.ceil(this.snippetsFiltrados.length / this.snippetsPorPagina); // Math.ceil() redondea hacia arriba para calcular el número total de páginas.
 
-    if(this.chipMovido){
+    const inicio = (this.paginaActual - 1) * this.snippetsPorPagina;
+
+    this.snippetsPaginados = this.snippetsFiltrados.slice(inicio, inicio + this.snippetsPorPagina);
+  }
+
+  cambiarPagina(pagina: number) {
+    if (pagina < 1 || pagina > this.totalPaginas) {
       return;
     }
 
-    this.tecnologiaSeleccionada =
-      tecnologia;
+    this.paginaActual = pagina;
+    this.actualizarPaginacion();
+    this.cdr.detectChanges();
+  }
+
+  seleccionarTecnologia(tecnologia: string, texto: string) {
+    if (this.chipMovido) {
+      return;
+    }
+
+    this.tecnologiaSeleccionada = tecnologia;
 
     this.actualizarCategoriasDisponibles();
 
-    this.filtrar(
-      texto,
-      this.tecnologiaSeleccionada,
-      this.categoriaSeleccionada
-    );
+    this.filtrar(texto, this.tecnologiaSeleccionada, this.categoriaSeleccionada);
   }
 
-  seleccionarCategoria(
-    categoria: string,
-    texto: string
-  ){
-
-    if(this.chipMovido){
+  seleccionarCategoria(categoria: string, texto: string) {
+    if (this.chipMovido) {
       return;
     }
 
-    this.categoriaSeleccionada =
-      categoria;
+    this.categoriaSeleccionada = categoria;
 
-    this.filtrar(
-      texto,
-      this.tecnologiaSeleccionada,
-      this.categoriaSeleccionada
-    );
+    this.filtrar(texto, this.tecnologiaSeleccionada, this.categoriaSeleccionada);
   }
 
-  abrirEdicion(snippet: any){
+  abrirEdicion(snippet: any) {
     this.snippetEditando = snippet;
     this.cdr.detectChanges();
   }
 
-  cerrarEdicion(){
+  cerrarEdicion() {
     this.snippetEditando = null;
     this.cdr.detectChanges();
   }
@@ -317,220 +238,136 @@ export class Snippets implements OnInit, OnDestroy {
     description: string,
     category: string,
     technology: string,
-    code: string
-  ){
-
+    code: string,
+  ) {
     const datos = {
       id,
       title,
       description,
       category,
       technology,
-      code
+      code,
     };
 
-    this.http.put(
-      this.apiUrl,
-      datos
-    ).subscribe({
-
-      next: respuesta => {
-
-        console.log(
-          'Snippet editado:',
-          respuesta
-        );
+    this.http.put(this.apiUrl, datos).subscribe({
+      next: (respuesta) => {
+        console.log('Snippet editado:', respuesta);
 
         this.snippetEditando = null;
 
         this.cargarSnippets();
       },
 
-      error: error => {
-
-        console.log(
-          'Error editando snippet:',
-          error
-        );
-      }
-
+      error: (error) => {
+        console.log('Error editando snippet:', error);
+      },
     });
   }
 
-  borrarSnippet(id: number){
+  borrarSnippet(id: number) {
+    const confirmar = confirm('¿Seguro que quieres eliminar este snippet?');
 
-    const confirmar = confirm(
-      '¿Seguro que quieres eliminar este snippet?'
-    );
-
-    if(!confirmar){
+    if (!confirmar) {
       return;
     }
 
-    this.http.delete(
-      this.apiUrl,
-      {
+    this.http
+      .delete(this.apiUrl, {
         body: {
-          id
-        }
-      }
-    ).subscribe({
+          id,
+        },
+      })
+      .subscribe({
+        next: (respuesta) => {
+          console.log('Snippet eliminado:', respuesta);
 
-      next: respuesta => {
+          this.cargarSnippets();
+        },
 
-        console.log(
-          'Snippet eliminado:',
-          respuesta
-        );
-
-        this.cargarSnippets();
-      },
-
-      error: error => {
-
-        console.log(
-          'Error eliminando snippet:',
-          error
-        );
-      }
-
-    });
+        error: (error) => {
+          console.log('Error eliminando snippet:', error);
+        },
+      });
   }
 
-  pararChips(
-    event: PointerEvent
-  ){
-
-    const elemento =
-      event.currentTarget as HTMLElement;
+  pararChips(event: PointerEvent) {
+    const elemento = event.currentTarget as HTMLElement;
 
     this.chipDragging = true;
     this.chipMovido = false;
     this.chipPausado = true;
 
-    this.chipStartX =
-      event.clientX;
+    this.chipStartX = event.clientX;
 
-    this.chipStartScroll =
-      elemento.scrollLeft;
+    this.chipStartScroll = elemento.scrollLeft;
   }
 
-  moverChips(
-    event: PointerEvent
-  ){
-
-    if(!this.chipDragging){
+  moverChips(event: PointerEvent) {
+    if (!this.chipDragging) {
       return;
     }
 
-    const elemento =
-      event.currentTarget as HTMLElement;
+    const elemento = event.currentTarget as HTMLElement;
 
-    const distancia =
-      event.clientX -
-      this.chipStartX;
+    const distancia = event.clientX - this.chipStartX;
 
-    if(
-      Math.abs(distancia) > 4
-    ){
-
+    if (Math.abs(distancia) > 4) {
       this.chipMovido = true;
 
       event.preventDefault();
 
-      elemento.scrollLeft =
-        this.chipStartScroll -
-        distancia;
+      elemento.scrollLeft = this.chipStartScroll - distancia;
     }
   }
 
-  soltarChips(){
-
+  soltarChips() {
     this.chipDragging = false;
 
     window.setTimeout(() => {
-
       this.chipMovido = false;
       this.chipPausado = false;
-
-    },150);
+    }, 150);
   }
 
-  iniciarMovimientoChips(){
+  iniciarMovimientoChips() {
+    this.chipTimer = window.setInterval(() => {
+      if (this.chipPausado) {
+        return;
+      }
 
-    this.chipTimer =
-      window.setInterval(() => {
+      const filas = this.host.nativeElement.querySelectorAll<HTMLElement>('.chips-viewport');
 
-        if(this.chipPausado){
+      filas.forEach((fila) => {
+        const maxScroll = fila.scrollWidth - fila.clientWidth;
+
+        if (maxScroll <= 2) {
+          fila.scrollLeft = 0;
+
+          fila.dataset['direccion'] = '1';
+
           return;
         }
 
-        const filas =
-          this.host.nativeElement
-            .querySelectorAll<HTMLElement>(
-              '.chips-viewport'
-            );
+        const direccion = Number(fila.dataset['direccion'] || '1');
 
-        filas.forEach(fila => {
+        if (direccion === 1) {
+          if (fila.scrollLeft >= maxScroll - 2) {
+            fila.scrollLeft = maxScroll;
 
-          const maxScroll =
-            fila.scrollWidth -
-            fila.clientWidth;
-
-          if(maxScroll <= 2){
-
+            fila.dataset['direccion'] = '-1';
+          } else {
+            fila.scrollLeft += 1;
+          }
+        } else {
+          if (fila.scrollLeft <= 2) {
             fila.scrollLeft = 0;
 
-            fila.dataset['direccion'] =
-              '1';
-
-            return;
+            fila.dataset['direccion'] = '1';
+          } else {
+            fila.scrollLeft -= 1;
           }
-
-          const direccion =
-            Number(
-              fila.dataset['direccion']
-              || '1'
-            );
-
-          if(direccion === 1){
-
-            if(
-              fila.scrollLeft >=
-              maxScroll - 2
-            ){
-
-              fila.scrollLeft =
-                maxScroll;
-
-              fila.dataset['direccion'] =
-                '-1';
-
-            }else{
-
-              fila.scrollLeft += 1;
-            }
-
-          }else{
-
-            if(
-              fila.scrollLeft <= 2
-            ){
-
-              fila.scrollLeft = 0;
-
-              fila.dataset['direccion'] =
-                '1';
-
-            }else{
-
-              fila.scrollLeft -= 1;
-            }
-
-          }
-
-        });
-
-      },25);
+        }
+      });
+    }, 25);
   }
 }

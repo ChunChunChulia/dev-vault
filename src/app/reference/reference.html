@@ -4,11 +4,15 @@
 
     <h1>REFERENCE</h1>
 
-    <button
-      type="button"
-      (click)="abrirFormulario()">
-      + NUEVA REFERENCIA
-    </button>
+    @if(auth.admin()){
+
+      <button
+        type="button"
+        (click)="abrirFormulario()">
+        + NUEVA REFERENCIA
+      </button>
+
+    }
 
   </header>
 
@@ -21,7 +25,7 @@
     {{ references.length }} RESULTADOS
     </p>
 
-  @if(mostrarFormulario){
+  @if(auth.admin() && mostrarFormulario){
 
     <section class="reference-form">
 
@@ -167,7 +171,7 @@
 
   <div class="reference-grid">
 
-    @for(reference of references; track reference.id){
+    @for(reference of referencesPaginadas; track reference.id){
 
       <article class="reference-card">
 
@@ -210,21 +214,25 @@
         </div>
 
 
-        <div class="reference-actions">
+        @if(auth.admin()){
 
-          <button
-            type="button"
-            (click)="abrirEdicion(reference)">
-            EDITAR
-          </button>
+          <div class="reference-actions">
 
-          <button
-            type="button"
-            (click)="borrarReference(reference)">
-            ×
-          </button>
+            <button
+              type="button"
+              (click)="abrirEdicion(reference)">
+              EDITAR
+            </button>
 
-        </div>
+            <button
+              type="button"
+              (click)="borrarReference(reference)">
+              ×
+            </button>
+
+          </div>
+
+        }
 
       </article>
 
@@ -237,5 +245,41 @@
     }
 
   </div>
+
+  @if(totalPaginas > 0){
+
+    <div class="reference-pagination">
+
+      @if(paginaActual > 1){
+
+        <button
+          type="button"
+          class="filter-chip"
+          (click)="cambiarPagina(paginaActual - 1)"
+        >
+          Anterior
+        </button>
+
+      }
+
+      <span class="results-count">
+        Página {{ paginaActual }} de {{ totalPaginas }}
+      </span>
+
+      @if(paginaActual < totalPaginas){
+
+        <button
+          type="button"
+          class="filter-chip"
+          (click)="cambiarPagina(paginaActual + 1)"
+        >
+          Siguiente
+        </button>
+
+      }
+
+    </div>
+
+  }
 
 </main>

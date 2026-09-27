@@ -1,0 +1,28 @@
+<h1>Administrador</h1>
+
+@if(auth.admin()){
+
+  <p class="login-status">
+    Modo administrador activo. Puedes navegar usando el menú.
+  </p>
+
+} @else {
+
+  <form
+    class="login-form"
+    (ngSubmit)="auth.iniciarSesion(usuario.value, password.value)"
+  >
+    <label>Usuario</label>
+    <input type="text" name="usuario" #usuario>
+
+    <label>Contraseña</label>
+    <input type="password" name="password" #password>
+
+    @if(auth.cargando()){
+      <p class="login-status">Comprobando sesión...</p>
+    } @else {
+      <button type="submit">Entrar</button>
+    }
+  </form>
+
+}

@@ -16,7 +16,7 @@ export class Knowledge implements OnInit {
   ngOnInit(): void {
 
     this.http
-      .get<any[]>('http://localhost/dev-vault-api/technologies/get-all.php')
+      .get<any[]>('/dev-vault-api/technologies/get-all.php')
       .subscribe(data => {
 
         this.technologies = data;

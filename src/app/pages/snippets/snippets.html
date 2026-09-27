@@ -1,6 +1,6 @@
 <h1>Snippets</h1>
 
-@if(!mostrarFormulario()){
+@if(!auth.admin() || !mostrarFormulario()){
 
   <div class="library-tools">
 
@@ -118,19 +118,23 @@
       {{ snippetsFiltrados.length }} resultados
     </span>
 
-    <button
-      type="button"
-      class="insert-button"
-      (click)="mostrarFormulario.set(true)"
-    >
-      + Insertar snippet
-    </button>
+    @if(auth.admin()){
+
+      <button
+        type="button"
+        class="insert-button"
+        (click)="mostrarFormulario.set(true)"
+      >
+        + Insertar snippet
+      </button>
+
+    }
 
   </div>
 
   <div class="snippet-list">
 
-    @for(snippet of snippetsFiltrados; track snippet.id){
+    @for(snippet of snippetsPaginados; track snippet.id){
 
       <article class="snippet-card">
 
@@ -162,23 +166,27 @@
 
           <pre class="snippet-code"><code>{{ snippet.code }}</code></pre>
 
-            <div class="snippet-actions">
+            @if(auth.admin()){
 
-              <button type="button" class="edit-snippet" (click)="abrirEdicion(snippet)"
-              >
-                EDITAR
-              </button>
+              <div class="snippet-actions">
 
-              <button type="button" class="delete-snippet" (click)="borrarSnippet(snippet.id)"
-              >
-                X
-              </button>
+                <button type="button" class="edit-snippet" (click)="abrirEdicion(snippet)"
+                >
+                  EDITAR
+                </button>
 
-            </div>
+                <button type="button" class="delete-snippet" (click)="borrarSnippet(snippet.id)"
+                >
+                  X
+                </button>
+
+              </div>
+
+            }
 
         </div>
 
-        @if(snippetEditando?.id === snippet.id){
+        @if(auth.admin() && snippetEditando?.id === snippet.id){
 
         <div class="snippet-edit-form">
 
@@ -265,6 +273,42 @@
     }
 
   </div>
+
+  @if(totalPaginas > 0){
+
+    <div class="snippet-pagination">
+
+      @if(paginaActual > 1){
+
+        <button
+          type="button"
+          class="filter-chip"
+          (click)="cambiarPagina(paginaActual - 1)"
+        >
+          Anterior
+        </button>
+
+      }
+
+      <span class="results-count">
+        Página {{ paginaActual }} de {{ totalPaginas }}
+      </span>
+
+      @if(paginaActual < totalPaginas){
+
+        <button
+          type="button"
+          class="filter-chip"
+          (click)="cambiarPagina(paginaActual + 1)"
+        >
+          Siguiente
+        </button>
+
+      }
+
+    </div>
+
+  }
 
 } @else {
 

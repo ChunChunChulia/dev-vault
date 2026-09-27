@@ -1,6 +1,6 @@
 <h1>RESOURCES</h1>
 
-@if(formulario){
+@if(auth.admin() && formulario){
 
   <div class="resource-form">
 
@@ -154,24 +154,28 @@
     {{ resourcesFiltrados.length }} RECURSOS
   </span>
 
-  <button
-    class="insert-button"
-    type="button"
-    (click)="mostrarFormulario()"
-  >
-    INSERTAR RECURSO
-  </button>
+  @if(auth.admin()){
+
+    <button
+      class="insert-button"
+      type="button"
+      (click)="mostrarFormulario()"
+    >
+      INSERTAR RECURSO
+    </button>
+
+  }
 
 </div>
 
 
 <div class="resources-grid">
 
-  @for(resource of resourcesFiltrados; track resource.id){
+  @for(resource of resourcesPaginados; track resource.id){
 
     <article
       class="resource-card"
-      [class.editing]="recursoEditando?.id === resource.id"
+      [class.editing]="auth.admin() && recursoEditando?.id === resource.id"
     >
 
       <div class="resource-image">
@@ -226,28 +230,32 @@
         </a>
 
 
-        <div class="resource-buttons">
+        @if(auth.admin()){
 
-          <button
-            type="button"
-            (click)="abrirEdicion(resource)"
-          >
-            EDITAR
-          </button>
+          <div class="resource-buttons">
 
-          <button
-            type="button"
-            (click)="borrarResource(resource.id)"
-          >
-            X
-          </button>
+            <button
+              type="button"
+              (click)="abrirEdicion(resource)"
+            >
+              EDITAR
+            </button>
 
-        </div>
+            <button
+              type="button"
+              (click)="borrarResource(resource.id)"
+            >
+              X
+            </button>
+
+          </div>
+
+        }
 
       </div>
 
 
-      @if(recursoEditando?.id === resource.id){
+      @if(auth.admin() && recursoEditando?.id === resource.id){
 
         <div class="resource-edit-form">
 
@@ -336,3 +344,38 @@
   }
 
 </div>
+  @if(totalPaginas > 0){
+
+    <div class="resource-pagination">
+
+      @if(paginaActual > 1){
+
+        <button
+          type="button"
+          class="filter-chip"
+          (click)="cambiarPagina(paginaActual - 1)"
+        >
+          Anterior
+        </button>
+
+      }
+
+      <span class="results-count">
+        Página {{ paginaActual }} de {{ totalPaginas }}
+      </span>
+
+      @if(paginaActual < totalPaginas){
+
+        <button
+          type="button"
+          class="filter-chip"
+          (click)="cambiarPagina(paginaActual + 1)"
+        >
+          Siguiente
+        </button>
+
+      }
+
+    </div>
+
+  }

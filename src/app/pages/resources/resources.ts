@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-resources',
@@ -19,6 +20,11 @@ export class ResourcesComponent implements OnInit, OnDestroy {
 
   resources: any[] = [];
   resourcesFiltrados: any[] = [];
+  resourcesPaginados: any[] = [];
+
+  paginaActual = 1;
+  resourcesPorPagina = 6;
+  totalPaginas = 0;
 
   formulario = false;
   recursoEditando: any = null;
@@ -37,9 +43,10 @@ export class ResourcesComponent implements OnInit, OnDestroy {
   chipStartScroll = 0;
   chipTimer?: number;
 
-  apiUrl = 'http://localhost/dev-vault-api/technologies/resources.php';
+  apiUrl = 'https://devvault.alwaysdata.net/dev-vault-api/technologies/resources.php';
 
   constructor(
+    public auth: AuthService,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     private host: ElementRef<HTMLElement>
@@ -236,6 +243,38 @@ export class ResourcesComponent implements OnInit, OnDestroy {
       );
     });
 
+    this.paginaActual = 1;
+    this.actualizarPaginacion();
+
+    this.cdr.detectChanges();
+  }
+
+  actualizarPaginacion(){
+
+    this.totalPaginas = Math.ceil(this.resourcesFiltrados.length / this.resourcesPorPagina); // Math.ceil() redondea hacia arriba para calcular el número total de páginas.
+
+    const inicio =
+      (this.paginaActual - 1) *
+      this.resourcesPorPagina;
+
+    this.resourcesPaginados =
+      this.resourcesFiltrados.slice(
+        inicio,
+        inicio + this.resourcesPorPagina
+      );
+  }
+
+  cambiarPagina(pagina: number){
+
+    if(
+      pagina < 1 ||
+      pagina > this.totalPaginas
+    ){
+      return;
+    }
+
+    this.paginaActual = pagina;
+    this.actualizarPaginacion();
     this.cdr.detectChanges();
   }
 

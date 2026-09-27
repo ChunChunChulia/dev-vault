@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../auth.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -8,5 +9,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './menu.css'
 })
 export class Menu {
+
+  constructor(public auth: AuthService) {}
 
 }
